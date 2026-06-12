@@ -6,7 +6,7 @@ import pandas as pd
 st.set_page_config(page_title="영어 표현 암기 퀴즈", page_icon="🇬🇧", layout="centered")
 
 # ==========================================================
-# 📚 2025년 7월(Jul 2025) 학습 데이터 (나중에 엑셀 파일로 대체 가능)
+# 📚 2025년 7월(Jul 2025) 학습 데이터
 # ==========================================================
 QUIZ_DATA = [
     {"hint": "(시중에) 모두에게 돌아갈 만큼 설탕이 충분하지 않아요.", "answer": "there's just not enough sugar to go around", "note": ""},
@@ -27,7 +27,7 @@ QUIZ_DATA = [
 ]
 
 # ==========================================================
-# 🧠 세션 상태 관리 (페이지 새로고침 시 데이터 초기화 방지)
+# 🧠 세션 상태 관리
 # ==========================================================
 if 'quiz_data' not in st.session_state:
     st.session_state.quiz_data = QUIZ_DATA.copy()
@@ -37,6 +37,7 @@ if 'quiz_data' not in st.session_state:
     st.session_state.show_feedback = False
     st.session_state.selected_answer = None
     st.session_state.quiz_finished = False
+    st.session_state.current_options = []
 
 # ==========================================================
 # 🎮 퀴즈 로직 함수
@@ -69,6 +70,7 @@ def reset_quiz():
     st.session_state.show_feedback = False
     st.session_state.selected_answer = None
     st.session_state.quiz_finished = False
+    st.session_state.current_options = []
 
 # ==========================================================
 # 🎨 UI (화면) 구성
@@ -91,7 +93,7 @@ if st.session_state.quiz_finished:
         st.markdown("👑 완벽합니다! 7월 표현을 모두 마스터하셨네요!")
     elif accuracy >= 80:
         st.markdown("👏 아주 훌륭합니다! 조금만 더 복습하면 완벽해질 거예요.")
- else:
+    else:
         st.markdown("💪 틀린 문제는 노트와 함께 다시 한번 복습해 보세요!")
     
     if st.button("🔄 퀴즈 다시 시작", type="primary"):
@@ -110,7 +112,7 @@ else:
     st.markdown(f"### 💡 힌트: {current_q['hint']}")
     
     # 보기 생성 (세션 상태에 저장하여 리렌더링 시 변경되지 않게 함)
-    if 'current_options' not in st.session_state or st.session_state.show_feedback == False:
+    if not st.session_state.current_options or not st.session_state.show_feedback:
         st.session_state.current_options = generate_options(current_q, st.session_state.quiz_data)
     
     options = st.session_state.current_options
