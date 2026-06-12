@@ -289,13 +289,14 @@ else:
     
     # 상단 진행 바
     st.progress((st.session_state.current_idx) / total_q)
-    
-    # 힌트 표시 (한국어 번역)
-    st.markdown(f"##### 💡 힌트 (한국어): {current_q['hint']}")
+
     
     # 영어 문장 표시 (빈칸 포함)
     st.markdown(f"### 📝 영어 문장 (빈칸 채우기):")
     st.info(f"**{current_q['sentence']}**")
+
+    # 힌트 표시 (한국어 번역)
+    st.markdown(f"##### 💡 힌트 (한국어): {current_q['hint']}")
     
     # 보기 생성 (세션 상태에 저장하여 리렌더링 시 변경되지 않게 함)
     if not st.session_state.current_options or not st.session_state.show_feedback:
