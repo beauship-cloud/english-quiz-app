@@ -398,7 +398,7 @@ if st.session_state.quiz_finished:
             st.rerun()
             
     with col2:
-        if st.session_state.wrong_answers and not st.session_state.is_retry
+        if st.session_state.wrong_answers and not st.session_state.is_retry:
 
         
 
