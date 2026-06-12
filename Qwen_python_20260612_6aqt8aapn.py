@@ -505,10 +505,9 @@ else:
     
     st.progress((st.session_state.current_idx) / total_q)
     
-    st.markdown(f"#### 💡 힌트 (한국어): {current_q['hint']}")
     st.markdown(f"####  영어 문장 (빈칸 채우기):")
     st.info(f"**{current_q['sentence']}**")
-    
+    st.markdown(f"##### 💡 힌트 (한국어): {current_q['hint']}")
     if st.session_state.last_question_idx != st.session_state.current_idx:
         st.session_state.current_options = generate_options(current_q["answer"], st.session_state.quiz_data)
         st.session_state.last_question_idx = st.session_state.current_idx
