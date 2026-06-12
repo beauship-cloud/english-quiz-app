@@ -123,11 +123,67 @@ JUNE_2025_DATA = [
 ]
 
 # ==========================================================
+# 📚 2025년 5월(May 2025) 핵심 표현 학습 데이터
+# ==========================================================
+MAY_2025_DATA = [
+    {"hint": "통제 불가능해. / 다들 제멋대로야.", "sentence": "it's like ________ ________.", "answer": "herding cats", "note": "herding cats: (통제하기 어려운 상황을) 고양이 떼를 모는 것처럼 어렵다"},
+    {"hint": "소렌슨은 나에게 일라이 릴리를 매우 존경한다고 말했고, 서로를 긴장하게 만들며 자극을 주고받는 관계라고 했다", "sentence": "Sorenson told me he had the highest respect for Eli Lilly and that they ________ ________ ________ ________ ________.", "answer": "keep each other on their toes", "note": "keep someone on their toes: 긴장하게 만들다, 자극을 주다"},
+    {"hint": "노보는 CIMA를 자사의 새로운 획기적인 약으로 크게 홍보하고 있었다", "sentence": "Novo was ________ ________ CIMA as its new breakthrough drug", "answer": "hyping up", "note": "hyp up: 크게 홍보하다, 과장하여 선전하다"},
+    {"hint": "그는 사실상 밀려나고 있다", "sentence": "He's essentially being ________ ________.", "answer": "pushed out", "note": "push out: 밀어내다, 쫓아내다"},
+    {"hint": "일부 사람들의 체중을 15%까지 줄여주는 새로운 체중 감량 약입니다.", "sentence": "A new weight loss drug that helps some people ________ ________ 15% of their weight.", "answer": "shave off", "note": "shave off: (조금씩) 줄이다, 깎아내다"},
+    {"hint": "노보 노디스크 주가가 가장 크게 상승하고 있어요.", "sentence": " I see Novo Nordisk ________ ________ the biggest gains.", "answer": "putting up", "note": "put up: (기록/수치를) 올리다, 내세우다"},
+    {"hint": "매출이 엄청나게 급증했어요", "sentence": "And sales were ________ ________ ________.", "answer": "through the roof", "note": "through the roof: (가격/수치가) 급등하다, 천장을 뚫고 올라가다"},
+    {"hint": "존 바라소가 '핵 옵션'을 사용하기 위해 표를 모으고 있다.", "sentence": "Barrasso is ________ ________ to go nuclear", "answer": "corralling votes", "note": "corral votes: (표를) 모으다, 동원하다"},
+    {"hint": "그냥 쭉쭉 해치워. 한 번에 끝내버려.", "sentence": "Just ________ ________ ________, go right through 'em.", "answer": "crank 'em out", "note": "crank out: (기계적으로) 대량 생산하다, 해치우다"},
+    {"hint": "한번 해볼게.", "sentence": "I'll ________ ________ ________.", "answer": "give it a whack", "note": "give it a whack/shot: 한번 시도해보다"},
+    {"hint": "사람들은 자신이 받은 팁, 특히 현금으로 받은 팁에 대해 항상 솔직하게 신고하지는 않는다.", "sentence": "people aren't always the most ________ in reporting the tips that they get, especially the tips that come through in cash", "answer": "forthcoming", "note": "forthcoming: 솔직한, 정보/도움을 아끼지 않는"},
+    {"hint": "워싱턴에 있는, 혹은 권력과 가까운 위치에 있는 거의 모든 공화당 인사들은 \"그래, 이거 괜찮네\"라고 하는 거야.", "sentence": "Every Republican in Washington, or within ________ ________ ________ ________ ________ is like, yeah, okay, this is good.", "answer": "a stone's throw of any power", "note": "a stone's throw: 매우 가까운 거리"},
+    {"hint": "그냥 보수조항은 잊어버린 셈이지 (아예 '보수조항' 자체를 없다고 치고 행동하네.)", "sentence": "It's just forget the ________ ________.", "answer": "emolument clause", "note": "emolument: 급여, 보수, 수당"},
+    {"hint": "속임수(혹은 사기)로 가득하다", "sentence": "It is ________ all the way down", "answer": "grift", "note": "grift: 사기, 속임수"},
+    {"hint": "값을 매길 수 없는 보물로 가득하지만, 점점 더 빚더미에 빠지고 있는 상태이다.", "sentence": "that is ________ ________ priceless treasures, but is falling deeper into debt.", "answer": "awash in", "note": "awash in: (물/감정 등으로) 가득 찬, 넘치는"},
+    {"hint": "여기서는 모든 게 마치 첩보 영화처럼 은밀하고 비밀스럽게 이루어진다.", "sentence": "it's all fairly ________ ________ ________ here.", "answer": "cloak and dagger", "note": "cloak and dagger: 은밀한, 비밀스러운 (첩보 영화처럼)"},
+    {"hint": "감사 작업은 결국 그 지점에서 벽에 부딪혀 중단되고 만다.", "sentence": "And that's basically where that auditing effort ________ ________ ________.", "answer": "hits a wall", "note": "hit a wall: (진행이) 막히다, 더 이상 진전이 없다"},
+    {"hint": "재정 관리 부실에 대한 문화는 또한 갈등을 유발하는 쟁점이 되고 있다.", "sentence": "the culture of financial mismanagement is also a ________ ________.", "answer": "wedge issue", "note": "wedge issue: (집단 간) 분열을 일으키는 쟁점"},
+    {"hint": "가장 좋은 방법은 지금 가지고 있는 재료들을 잘 관리하고, 꼭 활용하는 거예요.", "sentence": " your best bet is to just ________ ________ ________ what you have ________ ________ and make sure you're using it.", "answer": "stay on top of ... on hand", "note": "stay on top of: (상황을) 잘 파악하다, 관리하다 / on hand:手头에 있는, 준비된"},
+    {"hint": "본질적으로는 그 재료를 다음에 쓸 때도 세일 가격으로 확보해두는 셈이에요.", "sentence": " You're essentially like ________ ________ the sale price for the next time you wanna use that ingredient.", "answer": "locking in", "note": "lock in: (가격/이율을) 고정하다, 확보해두다"},
+    {"hint": "정말 좋은 글을 읽을 때 속에서 톡톡 튀는 듯한 설레는 기분, 아시죠?", "sentence": "Know that ________ ________ you get when you read something really good.", "answer": "fizzy feeling", "note": "fizzy feeling: (탄산처럼) 톡톡 튀는 기분, 설렘"},
+    {"hint": "가끔씩 당장은 사용할 수 없는 물건이 세일할 때가 있어요.", "sentence": "Every now and then there is a sale on something that you might not be able to use at that exact moment", "answer": "", "note": ""},
+    {"hint": "장 보러 가기 전에 매장 전단지를 살펴보세요", "sentence": "Look at the store ________ before you go shopping.", "answer": "circulars", "note": "circular: (상점의) 전단지, 광고지"},
+    {"hint": "약간만 보태도 효과가 아주 커요.", "sentence": "if you just add a little bit, it really ________ ________ ________ ________", "answer": "goes a long way", "note": "go a long way: (약간으로도) 큰 효과를 내다, 오래 가다"},
+    {"hint": "자신에게 필요한 능력이 이미 있다는 걸 마음속 깊이 알고 있는 것이다.", "sentence": "It's knowing in your ________ ________ that you have the skills.", "answer": "back pocket", "note": "in one's back pocket: (필요할 때 꺼낼 수 있게) 가지고 있는, 준비된"},
+    {"hint": "두 번째로 얻을 교훈은 분위기를 파악하는 것이다.", "sentence": "Takeaway two is to ________ ________ ________.", "answer": "read the room", "note": "read the room: (분위기를) 파악하다, 눈치를 채다"},
+    {"hint": "그런 것들은 한 개인의 성격이나 인생 경험의 여러 층을 드러내며 그 사람을 더 입체적으로 만든다.", "sentence": "they ________ the individual revealing some layers of their personality or life experiences.", "answer": "complicate", "note": "complicate: (단순하지 않게) 복잡하게 만들다, 입체적으로 만들다"},
+    {"hint": "우리 모두 한 번쯤은 정말 지루해서 미칠 뻔한 모임에 참석한 적이 있을 것이다", "sentence": "I think we've all been to a gathering where we were ________ ________ ________ ________", "answer": "bored out of our skulls", "note": "bored out of one's skull: 지루해서 미칠 것 같다"},
+    {"hint": "그건 사실상 주최자가 자신의 역할을 포기하는 거예요.", "sentence": "Like that's actually the host ________ their role.", "answer": "abdicating", "note": "abdicate: (책임/역할을) 포기하다, 저버리다"},
+    {"hint": "저는 '경계 있는 연결'을 가르칩니다. 단순히 연결 자체를 위한 연결이 아니라요.", "sentence": "I teach what I call ________ ________, which is not connection for connection's sake", "answer": "boundaried connection", "note": "boundaried: 경계가 있는, 선이 분명한"},
+    {"hint": "친환경 데이터 센터의 대표적인 사례라고 할 수 있습니다.", "sentence": "it is kind of a ________ ________ for a green data center.", "answer": "poster child", "note": "poster child: (특징을 잘 보여주는) 대표 사례, 상징"},
+    {"hint": "서버 전체가 차가운 액체 용액에 잠겨 있습니다.", "sentence": "whole servers are ________ in this cool liquid bath", "answer": "immersed", "note": "immerse: (액체 속에) 잠기다, 푹 빠지다"},
+    {"hint": "데이비드에 따르면, 공기와 물로 열을 옮기는 기존의 데이지 체인 방식 냉각 시스템은 자원을 과도하게 소모한다고 합니다.", "sentence": "David says the older way of cooling data centers, that ________ ________ of moving heat with air and water is just completely consumptive.", "answer": "daisy chain", "note": "daisy chain: (장치를) 사슬처럼 연결하다"},
+    {"hint": "마린은 종종, 그러니까, 사물의 본질에 대해 골똘히 생각하곤 해", "sentence": "Marine often finds herself ________ ________ ________ ________ ________ of things", "answer": "puzzling over ... the fundamental nature", "note": "puzzle over: (해결하려고) 골똘히 생각하다, 고심하다"},
+    {"hint": "지난 이틀은 완전히 말도 안 되게 혼란스러웠어", "sentence": "the past 48 hours have been completely ________.", "answer": "bonkers", "note": "bonkers: 미친, 정신나간, 혼란스러운"},
+    {"hint": "그건 정말 우리를 당황하게 했어요.", "sentence": " It really ________ ________ ________ ________ ________.", "answer": "threw us for a loop", "note": "throw someone for a loop: (놀라게 하여) 당황하게 하다"},
+    {"hint": "그래요. 조금 뻔하긴 하지만 감히 한마디 해볼게요.(누가 봐도 당연한 얘기를, 마치 대단한 예측이나 위험 감수처럼 말하는 것)", "sentence": "Yeah. I'm gonna ________ ________ ________ ________ ________ here", "answer": "go out on an obvious limb", "note": "go out on a limb: (위험을 무릅쓰고) 감히 말하다, 의견을 내다"},
+    {"hint": "끈적임은 스티키 노트에 있어 그냥 부가적인 기능일 뿐이에요.", "sentence": "The stickiness is a ________ ________ ________ to the sticky note", "answer": "bell and whistle", "note": "bells and whistles: (기본 기능 외의) 부가적인 기능, 사치스러운 장식"},
+    {"hint": "그것은 내 삶에 진짜 나쁜 영향을 줄 수 있어요", "sentence": "It can really ________ ________ ________ on my life.", "answer": "take a toll", "note": "take a toll: (나쁜) 영향을 미치다, 대가를 치르게 하다"},
+    {"hint": "그 반응은 찌꺼기, 머리카락, 기타 어떤 것이라도 — 당신의 배수구를 막고 있을 수 있는 작은 막힘들을 뚫어줄 거예요.", "sentence": "That reaction is going to ________ ________ gunk, hair, whatever, any small clogs that may be clogging any of your drains", "answer": "push through", "note": "push through: (막힌 것을) 뚫고 나가다, 관철시키다"},
+    {"hint": "우린 좁은 틈에 파고드는 것에 대해 말하고 있는 거예요", "sentence": "we're talking about getting into ________.", "answer": "crevices", "note": "crevice: (좁은) 틈, 갈라진 곳"},
+    {"hint": "나는 미친 듯이 청소를 하기 시작했어.", "sentence": "I went on this ________ ________ ________ ", "answer": "frenzied cleaning spree", "note": "spree: (특정 활동을) 한바탕 하다, (쇼핑/음주) spree"},
+    {"hint": "그리고 대부분은 그냥 떼어내서 식기세척기에 넣는 거예요", "sentence": "And a lot of the times it's just about ________ them ________ and throwing them in a dishwasher.", "answer": "popping ... down", "note": "pop down: (간단히) 내려놓다, 두다"},
+    {"hint": "오랫동안 만져보지도 않은 도구를 꺼내서 진짜 힘을 들여 청소하는 것까지도 포함될 수 있어요.", "sentence": " We may be even talking about pulling out tools and things we haven't touched in a while, and really some ________ ________.", "answer": "elbow grease", "note": "elbow grease: (청소/작업에 필요한) 힘, 노력"},
+    {"hint": "나는 썸 타는 데 익숙해서 굳이 길게 말 안 해도, 그냥 웃는 리액션 하나만 남겨도 분위기를 이어갈 수 있다", "sentence": "I'm more practiced at flirting and I can just boop, leave a little haha reaction", "answer": "", "note": ""},
+    {"hint": "때로는 내가 불씨를 지피는 사람이 되기도 하고, 아빠는 다소 중재자 역할을 하기도 해. 그래서 마치 가족 식탁에서처럼 말이야", "sentence": "Sometimes I'm the ________ ________ as well, and my dad is a bit of the pacifier, and so just like at a family dinner table,", "answer": "fire starter", "note": "fire starter: (논쟁/불화를) 일으키는 사람 / pacifier: 중재자, 진정시키는 사람"},
+    {"hint": "만남을 시작하고 구혼자들과 문자를 주고받기 시작했는데, 뭐라고 말해야 할지 몰랐어요.", "sentence": "I started having ________ and texting with SU tours, I didn't know what to say.", "answer": "dalliances", "note": "dalliance: (가벼운) 만남, 썸, flirtation"},
+    {"hint": "답장 대신 탭 백(반응)을 잘 활용해 혼란을 줄이세요", "sentence": "Master the art of the ________ ________ to cut clutter.", "answer": "tap back", "note": "tap back: (메신저에서) 반응(이모지)을 남기다"},
+    {"hint": "그리고 사소한 일에 신경 쓰지 않아요.", "sentence": "And I don't ________ ________ ________ ________ ________.", "answer": "sweat the small stuff", "note": "sweat the small stuff: 사소한 일에 신경 쓰다, 걱정하다"}
+]
+
+# ==========================================================
 # 📂 모든 월 데이터 딕셔너리
 # ==========================================================
 ALL_MONTHS_DATA = {
     "2025년 7월": JULY_2025_DATA,
-    "2025년 6월": JUNE_2025_DATA
+    "2025년 6월": JUNE_2025_DATA,
+    "2025년 5월": MAY_2025_DATA
 }
 
 # ==========================================================
