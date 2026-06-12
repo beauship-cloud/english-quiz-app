@@ -296,7 +296,7 @@ else:
     st.info(f"**{current_q['sentence']}**")
 
     # 힌트 표시 (한국어 번역)
-    st.markdown(f"##### 💡 힌트 (한국어): {current_q['hint']}")
+    st.markdown(f"###### 💡 힌트 (한국어): {current_q['hint']}")
     
     # 보기 생성 (세션 상태에 저장하여 리렌더링 시 변경되지 않게 함)
     if not st.session_state.current_options or not st.session_state.show_feedback:
