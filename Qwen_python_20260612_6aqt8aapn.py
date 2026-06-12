@@ -291,7 +291,7 @@ else:
     st.progress((st.session_state.current_idx) / total_q)
     
     # 힌트 표시 (한국어 번역)
-    st.markdown(f"## 💡 힌트 (한국어): {current_q['hint']}")
+    st.markdown(f"#### 💡 힌트 (한국어): {current_q['hint']}")
     
     # 영어 문장 표시 (빈칸 포함)
     st.markdown(f"### 📝 영어 문장 (빈칸 채우기):")
