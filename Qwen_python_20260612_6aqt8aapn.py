@@ -399,7 +399,8 @@ if st.session_state.quiz_finished:
             
     with col2:
         if st.session_state.wrong_answers and not st.session_state.is_retry:
-
-        
+            if st.button(f"❌ 틀린 문제만 다시 풀기 ({len(st.session_state.wrong_answers)}개)", type="secondary", use_container_width=True):
+                retry_wrong_answers()
+                st.rerun()
 
 
