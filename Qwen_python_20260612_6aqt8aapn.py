@@ -189,32 +189,51 @@ ALL_MONTHS_DATA = {
 # ==========================================================
 # 🧠 세션 상태 관리
 # ==========================================================
-if 'selected_month' not in st.session_state:
-    st.session_state.selected_month = "2025년 7월"
-if 'quiz_data' not in st.session_state:
-    st.session_state.quiz_data = []
-if 'current_idx' not in st.session_state:
-    st.session_state.current_idx = 0
-if 'score' not in st.session_state:
-    st.session_state.score = 0
-if 'show_feedback' not in st.session_state:
+saved_progress = local_storage.getItem('quiz_progress')
+
+if saved_progress:
+    st.session_state.selected_month = saved_progress.get('selected_month', "2025년 7월")
+    st.session_state.current_idx = saved_progress.get('current_idx', 0)
+    st.session_state.score = saved_progress.get('score', 0)
+    st.session_state.month_progress = saved_progress.get('month_progress', {m: {"completed": 0, "score": 0} for m in ALL_MONTHS_DATA.keys()})
+    st.session_state.quiz_data = ALL_MONTHS_DATA[st.session_state.selected_month].copy()
     st.session_state.show_feedback = False
-if 'selected_answer' not in st.session_state:
     st.session_state.selected_answer = None
-if 'quiz_finished' not in st.session_state:
-    st.session_state.quiz_finished = False
-if 'current_options' not in st.session_state:
+    st.session_state.quiz_finished = st.session_state.current_idx >= len(st.session_state.quiz_data)
     st.session_state.current_options = []
-if 'last_question_idx' not in st.session_state:
     st.session_state.last_question_idx = -1
-if 'month_progress' not in st.session_state:
+    # 오답 노트용 변수 추가
+    if 'wrong_answers' not in st.session_state:
+        st.session_state.wrong_answers = []
+    if 'is_retry_mode' not in st.session_state:
+        st.session_state.is_retry_mode = False
+else:
+    st.session_state.selected_month = "2025년 7월"
+    st.session_state.quiz_data = ALL_MONTHS_DATA["2025년 7월"].copy()
+    random.shuffle(st.session_state.quiz_data)
+    st.session_state.current_idx = 0
+    st.session_state.score = 0
+    st.session_state.show_feedback = False
+    st.session_state.selected_answer = None
+    st.session_state.quiz_finished = False
+    st.session_state.current_options = []
+    st.session_state.last_question_idx = -1
     st.session_state.month_progress = {month: {"completed": 0, "score": 0} for month in ALL_MONTHS_DATA.keys()}
+    st.session_state.wrong_answers = []
+    st.session_state.is_retry_mode = False
 
 # ==========================================================
 # 🎮 퀴즈 로직 함수
 # ==========================================================
+def save_progress():
+    local_storage.setItem('quiz_progress', {
+        'selected_month': st.session_state.selected_month,
+        'current_idx': st.session_state.current_idx,
+        'score': st.session_state.score,
+        'month_progress': st.session_state.month_progress
+    })
+
 def load_month_data(month):
-    """선택한 월의 데이터를 불러오고 퀴즈를 초기화합니다."""
     st.session_state.selected_month = month
     st.session_state.quiz_data = ALL_MONTHS_DATA[month].copy()
     random.shuffle(st.session_state.quiz_data)
@@ -225,54 +244,79 @@ def load_month_data(month):
     st.session_state.quiz_finished = False
     st.session_state.current_options = []
     st.session_state.last_question_idx = -1
+    st.session_state.wrong_answers = [] # 오답 리스트 초기화
+    st.session_state.is_retry_mode = False # 오답 모드 해제
     update_progress()
+    save_progress()
 
 def update_progress():
-    """현재 진행 상황을 사이드바에 즉시 반영합니다."""
     month = st.session_state.selected_month
     completed = st.session_state.current_idx
     if st.session_state.quiz_finished:
         completed = len(st.session_state.quiz_data)
-    
     st.session_state.month_progress[month]["completed"] = completed
     st.session_state.month_progress[month]["score"] = st.session_state.score
 
 def generate_options(correct_answer, all_data):
-    """정답 1개와 오답 3개를 섞어 4지 선다 보기를 생성합니다."""
     wrong_options = [item["answer"] for item in all_data if item["answer"] != correct_answer]
-    sampled_wrongs = random.sample(wrong_options, min(3, len(wrong_options)))
+    # 오답 모드일 때는 전체 데이터가 적을 수 있으므로, 오답 개수에 맞춰 샘플링
+    num_wrongs = min(3, len(wrong_options))
+    sampled_wrongs = random.sample(wrong_options, num_wrongs) if num_wrongs > 0 else []
     options = [correct_answer] + sampled_wrongs
     random.shuffle(options)
     return options
 
-def check_answer(selected, correct):
+def check_answer(selected, correct, current_q):
     st.session_state.show_feedback = True
     st.session_state.selected_answer = selected
     if selected == correct:
         st.session_state.score += 1
-    update_progress() # 정답 확인 시 즉시 진행률 업데이트
+    else:
+        # 틀린 문제 오답 노트에 추가 (중복 방지)
+        if current_q not in st.session_state.wrong_answers:
+            st.session_state.wrong_answers.append(current_q)
+    update_progress()
+    save_progress()
 
 def next_question():
     st.session_state.current_idx += 1
     st.session_state.show_feedback = False
     st.session_state.selected_answer = None
-    st.session_state.last_question_idx = -1 # 다음 문제에서는 옵션 새로 생성
+    st.session_state.last_question_idx = -1
     
     if st.session_state.current_idx >= len(st.session_state.quiz_data):
         st.session_state.quiz_finished = True
     update_progress()
+    save_progress()
 
 def reset_quiz():
     load_month_data(st.session_state.selected_month)
 
+def retry_wrong_answers():
+    """틀린 문제만 모아서 퀴즈를 다시 시작합니다."""
+    if st.session_state.wrong_answers:
+        st.session_state.quiz_data = st.session_state.wrong_answers.copy()
+        random.shuffle(st.session_state.quiz_data)
+        st.session_state.current_idx = 0
+        st.session_state.score = 0
+        st.session_state.show_feedback = False
+        st.session_state.selected_answer = None
+        st.session_state.quiz_finished = False
+        st.session_state.current_options = []
+        st.session_state.last_question_idx = -1
+        st.session_state.wrong_answers = [] # 새로운 라운드에서 다시 틀린 것만 모으기 위해 초기화
+        st.session_state.is_retry_mode = True
+        update_progress()
+        save_progress()
+
 # ==========================================================
-#  UI (화면) 구성
+# 🎨 UI (화면) 구성
 # ==========================================================
 st.title("🇬🇧 영어 표현 암기 퀴즈")
 st.caption("문장 전체가 아닌, 각 문장의 핵심 표현(구/숙어)만 집중적으로 익혀보세요!")
 st.markdown("---")
 
-# 사이드바 - 월 선택 및 진행률
+# 사이드바
 with st.sidebar:
     st.header("📅 월 선택")
     
@@ -280,16 +324,24 @@ with st.sidebar:
         "공부할 월을 선택하세요:",
         list(ALL_MONTHS_DATA.keys()),
         index=list(ALL_MONTHS_DATA.keys()).index(st.session_state.selected_month),
-        key="month_selector"
+        key="month_selector",
+        disabled=st.session_state.is_retry_mode # 오답 모드일 때는 월 변경 비활성화
     )
     
-    if selected_month != st.session_state.selected_month:
+    if selected_month != st.session_state.selected_month and not st.session_state.is_retry_mode:
         load_month_data(selected_month)
     
     st.divider()
     
-    # 진행률 표시 (버그 수정됨)
-    st.header("📊 진행 현황")
+    # 오답 모드 표시
+    if st.session_state.is_retry_mode:
+        st.warning("⚠️ **오답 노트 모드**\n틀린 문제만 다시 풀고 있습니다!")
+        if st.button("🔙 원래 퀴즈로 돌아가기", use_container_width=True):
+            load_month_data(st.session_state.selected_month)
+            st.rerun()
+        st.divider()
+    
+    st.header(" 진행 현황")
     for month, progress in st.session_state.month_progress.items():
         total = len(ALL_MONTHS_DATA[month])
         completed = progress["completed"]
@@ -303,15 +355,19 @@ with st.sidebar:
             st.caption(f"아직 시작 안 함 (총 {total}문제)")
         st.divider()
     
-    # 현재 퀴즈 정보
     if not st.session_state.quiz_finished and len(st.session_state.quiz_data) > 0:
-        st.header("📈 현재 퀴즈")
+        st.header(" 현재 퀴즈")
         st.metric("문제", f"{st.session_state.current_idx + 1} / {len(st.session_state.quiz_data)}")
         st.metric("현재 점수", f"{st.session_state.score} / {st.session_state.current_idx}")
     
     st.divider()
     if st.button("🔄 현재 퀴즈 다시 시작", use_container_width=True):
         reset_quiz()
+    
+    if st.button("🗑️ 모든 진행상황 초기화", use_container_width=True, type="secondary"):
+        local_storage.removeItem('quiz_progress')
+        st.session_state.clear()
+        st.rerun()
 
 # 메인 콘텐츠 영역
 if not st.session_state.quiz_data:
@@ -321,9 +377,9 @@ if st.session_state.quiz_finished:
     # 🏆 결과 화면
     total = len(st.session_state.quiz_data)
     score = st.session_state.score
-    accuracy = (score / total) * 100
+    accuracy = (score / total) * 100 if total > 0 else 0
     
-    st.success(f"🎉 즈 완료! 최종 점수: **{score} / {total}**")
+    st.success(f"🎉 퀴즈 완료! 최종 점수: **{score} / {total}**")
     st.progress(accuracy / 100)
     st.markdown(f"### 정답률: {accuracy:.1f}%")
     
@@ -331,21 +387,26 @@ if st.session_state.quiz_finished:
         st.balloons()
         st.markdown("👑 완벽합니다! 모든 표현을 마스터하셨네요!")
     elif accuracy >= 80:
-        st.markdown("👏 아주 훌륭합니다! 조금만 더 복습하면 완벽해질 거예요.")
+        st.markdown(" 아주 훌륭합니다! 조금만 더 복습하면 완벽해질 거예요.")
     else:
         st.markdown("💪 틀린 문제는 노트와 함께 다시 한번 복습해 보세요!")
     
+    st.markdown("---")
     col1, col2 = st.columns(2)
+    
     with col1:
         if st.button("🔄 같은 월 다시 풀기", type="primary", use_container_width=True):
             reset_quiz()
+            st.rerun()
+            
     with col2:
-        months_list = list(ALL_MONTHS_DATA.keys())
-        current_idx = months_list.index(st.session_state.selected_month)
-        if current_idx < len(months_list) - 1:
-            next_month = months_list[current_idx + 1]
-            if st.button(f"➡️ {next_month}로 이동", use_container_width=True):
-                load_month_data(next_month)
+        # 오답 노트 버튼 추가
+        if st.session_state.wrong_answers and not st.session_state.is_retry_mode:
+            if st.button(f"❌ 틀린 문제만 다시 풀기 ({len(st.session_state.wrong_answers)}개)", type="secondary", use_container_width=True):
+                retry_wrong_answers()
+                st.rerun()
+        elif st.session_state.is_retry_mode:
+            st.info("🔄 오답 노트 모드를 완료했습니다!")
 
 else:
     # ❓ 퀴즈 진행 화면
@@ -354,14 +415,10 @@ else:
     
     st.progress((st.session_state.current_idx) / total_q)
     
-    # 힌트 표시 (한국어 번역)
     st.markdown(f"#### 💡 힌트 (한국어): {current_q['hint']}")
-    
-    # 영어 문장 표시 (빈칸 포함)
     st.markdown(f"#### 📝 영어 문장 (빈칸 채우기):")
     st.info(f"**{current_q['sentence']}**")
     
-    # 보기 생성 (옵션 버그 수정: 문제가 바뀌었을 때만 새로 생성)
     if st.session_state.last_question_idx != st.session_state.current_idx:
         st.session_state.current_options = generate_options(current_q["answer"], st.session_state.quiz_data)
         st.session_state.last_question_idx = st.session_state.current_idx
@@ -369,7 +426,7 @@ else:
     options = st.session_state.current_options
     
     selected = st.radio(
-        "빈칸에 들어갈 알맞은 표현을 선하세요:",
+        "빈칸에 들어갈 알맞은 표현을 선택하세요:",
         options,
         index=None,
         disabled=st.session_state.show_feedback,
@@ -380,24 +437,25 @@ else:
     
     with col1:
         if st.button("✅ 정답 확인", type="primary", disabled=(selected is None or st.session_state.show_feedback), use_container_width=True):
-            check_answer(selected, current_q["answer"])
+            check_answer(selected, current_q["answer"], current_q)
+            st.rerun()
             
     with col2:
         if st.button("➡️ 다음 문제", disabled=not st.session_state.show_feedback, use_container_width=True):
             next_question()
+            st.rerun()
 
-    # 피드백 표시
     if st.session_state.show_feedback:
         st.markdown("---")
         filled_sentence = current_q["sentence"].replace("________", f"**{current_q['answer']}**")
-        st.markdown(f"####  완성된 문장:")
+        st.markdown(f"#### 📝 완성된 문장:")
         st.success(f"`{filled_sentence}`")
         
         if st.session_state.selected_answer == current_q["answer"]:
             st.success("✅ **정답입니다!** 훌륭해요.")
         else:
             st.error(f"❌ **틀렸습니다.**")
-            st.markdown(f" **정답 표현:** `{current_q['answer']}`")
+            st.markdown(f"👉 **정답 표현:** `{current_q['answer']}`")
             
         if current_q["note"]:
-            st.markdown(f"📌 **노트:** {current_q['note']}")
+            st.markdown(f" **노트:** {current_q['note']}")
